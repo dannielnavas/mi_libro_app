@@ -7,11 +7,27 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-      children: <Widget>[
-        _BooksCard(context),
-        _BooksCard(context),
-      ],
-    ));
+          children: <Widget>[
+            _BooksCard(context),
+            _BooksCard(context),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.green,
+          child: Icon(Icons.add, color: Colors.white),
+          onPressed: () => _showBottom(context),
+        ));
+  }
+
+  Future<void> _showBottom(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              width: MediaQuery.of(context).size.width,
+              height: 500,
+              color: Colors.white,
+              child: BookForm(),
+            ));
   }
 
   Widget _BooksCard(BuildContext context) {
@@ -67,5 +83,39 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             )));
+  }
+}
+
+class BookForm extends StatelessWidget {
+  const BookForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Form(
+            // key: _formKey,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Add new book',
+              style: TextStyle(fontSize: 20, color: Colors.green)),
+          SizedBox(height: 20),
+          _buildTextField(label: 'Title'),
+        ])));
+  }
+
+  Widget _buildTextField({required String label}) {
+    return TextFormField(
+      decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.green, fontFamily: 'QuickSand'),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.green, width: 1.5),
+          )),
+    );
   }
 }
