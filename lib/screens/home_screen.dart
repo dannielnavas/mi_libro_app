@@ -21,10 +21,11 @@ class HomeScreen extends StatelessWidget {
 
   Future<void> _showBottom(BuildContext context) {
     return showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (context) => Container(
               width: MediaQuery.of(context).size.width,
-              height: 500,
+              height: 600,
               color: Colors.white,
               child: BookForm(),
             ));
@@ -32,7 +33,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _BooksCard(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12),
         child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 125,
@@ -100,7 +101,22 @@ class BookForm extends StatelessWidget {
           Text('Add new book',
               style: TextStyle(fontSize: 20, color: Colors.green)),
           SizedBox(height: 20),
-          _buildTextField(label: 'Title'),
+          _buildTextField(label: 'Book Title'),
+          SizedBox(
+            height: 16,
+          ),
+          _buildTextField(label: 'Author'),
+          SizedBox(
+            height: 16,
+          ),
+          _buildTextField(label: 'Image Url'),
+          SizedBox(
+            height: 16,
+          ),
+          _buildTextField(label: 'Year'),
+          SizedBox(
+            height: 16,
+          ),
         ])));
   }
 
