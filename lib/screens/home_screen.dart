@@ -92,35 +92,97 @@ class BookForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController authorController = TextEditingController();
+    final TextEditingController imageUrlController = TextEditingController();
+    final TextEditingController yearController = TextEditingController();
+
     return Padding(
         padding: EdgeInsets.all(8.0),
         child: Form(
-            // key: _formKey,
+            key: formKey,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Add new book',
-              style: TextStyle(fontSize: 20, color: Colors.green)),
-          SizedBox(height: 20),
-          _buildTextField(label: 'Book Title'),
-          SizedBox(
-            height: 16,
-          ),
-          _buildTextField(label: 'Author'),
-          SizedBox(
-            height: 16,
-          ),
-          _buildTextField(label: 'Image Url'),
-          SizedBox(
-            height: 16,
-          ),
-          _buildTextField(label: 'Year'),
-          SizedBox(
-            height: 16,
-          ),
-        ])));
+              Text('Add new book',
+                  style: TextStyle(fontSize: 20, color: Colors.green)),
+              SizedBox(height: 20),
+              _buildTextField(
+                  controller: titleController,
+                  label: 'Book Title',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                  ),
+              SizedBox(
+                height: 16,
+              ),
+              _buildTextField(
+                  controller: authorController,
+                  label: 'Author',
+                  validator: (value) {
+                    if (value == null ||value.isEmpty) {
+                      return 'Please enter an author';
+                    }
+                    return null;
+                  }, maxLines: 4),
+              SizedBox(
+                height: 16,
+              ),
+              _buildTextField(
+                  controller: imageUrlController,
+                  label: 'Image Url',
+                  validator: (value) {
+                    if (value == null ||value.isEmpty) {
+                      return 'Please enter an image url';
+                    }
+                    return null;
+                  }),
+              SizedBox(
+                height: 16,
+              ),
+              _buildTextField(
+                  controller: yearController,
+                  label: 'Year',
+                  validator: (value) {
+                    if (value == null ||value.isEmpty) {
+                      return 'Please enter a year';
+                    }
+                    return null;
+                  }),
+              SizedBox(
+                height: 16,
+              ),
+              Center(
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      child: Text(
+                        'Save book',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      )))
+            ])));
   }
 
-  Widget _buildTextField({required String label}) {
+  Widget _buildTextField(
+      {required String label,
+      required TextEditingController controller,
+      required String? Function(String?) validator,
+      int maxLines = 1}) {
     return TextFormField(
       decoration: InputDecoration(
           labelText: label,
@@ -132,6 +194,9 @@ class BookForm extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: Colors.green, width: 1.5),
           )),
+          validator: validator,
+          maxLines: maxLines,
+
     );
   }
 }
