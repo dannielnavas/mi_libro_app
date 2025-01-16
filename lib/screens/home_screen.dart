@@ -26,31 +26,31 @@ class HomeScreen extends StatelessWidget {
         "titulo": "Cien años de soledad",
         "autor": "Gabriel García Márquez",
         "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
-        "año": 1967
+        "anho": 1967
       },
       {
         "titulo": "1984",
         "autor": "George Orwell",
         "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
-        "año": 1949
+        "anho": 1949
       },
       {
         "titulo": "Orgullo y prejuicio",
         "autor": "Jane Austen",
         "portada": "https://m.media-amazon.com/images/I/81WcnNQ-TBL.jpg",
-        "año": 1813
+        "anho": 1813
       },
       {
         "titulo": "El señor de los anillos",
         "autor": "J.R.R. Tolkien",
         "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
-        "año": 1954
+        "anho": 1954
       },
       {
         "titulo": "Don Quijote de la Mancha",
         "autor": "Miguel de Cervantes",
         "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
-        "año": 1605
+        "anho": 1605
       }
     ];
   }
@@ -149,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          book['año'].toString(),
+                          book['anho'].toString(),
                           style:
                               TextStyle(fontSize: 15, fontFamily: 'QuickSand'),
                         ),
