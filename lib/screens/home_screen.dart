@@ -1,29 +1,86 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:mi_libro_app/screens/book_detail.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   Future<List<dynamic>> fetchBooks() async {
-    final url = Uri.parse('http://localhost:3001/books');
-    final response = await http.get(url);
-    final data = jsonDecode(response.body);
-    return data['books'];
+    // android 10.0.2.2
+    // ios 127.0.0.1
+    // final url = Uri.parse('http://localhost:3001/books');
+    // try {
+    // final response = await http.get(url);
+    // if (response.statusCode == 200) {
+    //   final data = jsonDecode(response.body);
+    //   return data['books'];
+    // } else {
+    //   print('Error ${response.statusCode}');
+    //   return [];
+    // }
+    // } catch (e) {
+    //   print('Error request');
+    //   return [];
+    // }
+    return [
+      {
+        "titulo": "Cien años de soledad",
+        "autor": "Gabriel García Márquez",
+        "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
+        "año": 1967
+      },
+      {
+        "titulo": "1984",
+        "autor": "George Orwell",
+        "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
+        "año": 1949
+      },
+      {
+        "titulo": "Orgullo y prejuicio",
+        "autor": "Jane Austen",
+        "portada": "https://m.media-amazon.com/images/I/81WcnNQ-TBL.jpg",
+        "año": 1813
+      },
+      {
+        "titulo": "El señor de los anillos",
+        "autor": "J.R.R. Tolkien",
+        "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
+        "año": 1954
+      },
+      {
+        "titulo": "Don Quijote de la Mancha",
+        "autor": "Miguel de Cervantes",
+        "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
+        "año": 1605
+      }
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    fetchBooks();
+    // fetchBooks();
     return Scaffold(
-        body: Column(
-          children: <Widget>[
-            _BooksCard(context),
-            _BooksCard(context),
-          ],
-        ),
+        body: FutureBuilder<List<dynamic>>(
+            future: fetchBooks(),
+            builder: (context, snapshot) {
+              final books = snapshot.data ?? [];
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(
+                    child: Text('No books found',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.green,
+                            fontFamily: 'QuickSand')));
+              }
+
+              return ListView.builder(
+                  itemCount: books.length,
+                  itemBuilder: (context, index) {
+                    return _BooksCard(context, books[index]);
+                  });
+            }),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,
           child: Icon(Icons.add, color: Colors.white),
@@ -43,14 +100,13 @@ class HomeScreen extends StatelessWidget {
             ));
   }
 
-  Widget _BooksCard(BuildContext context) {
+  Widget _BooksCard(BuildContext context, dynamic book) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    BookDetail(bookName: 'The Lean Startup')));
+                builder: (context) => BookDetail(bookName: book['titulo'])));
       },
       child: Padding(
           padding: const EdgeInsets.all(12),
@@ -70,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                         // child: Image.asset('alicia.jpg', fit: BoxFit.cover),
                         child: Image.network(
-                          'https://images-na.ssl-images-amazon.com/images/I/51Zymoq7UnL._AC_SY400_.jpg',
+                          book!['portada'].toString(),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -81,19 +137,19 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'The Lean Startup',
+                          book?['titulo'],
                           style:
                               TextStyle(fontSize: 20, fontFamily: 'QuickSand'),
                         ),
                         SizedBox(height: 4),
                         Text(
-                          'Eric Ries',
+                          book?['autor'],
                           style:
                               TextStyle(fontSize: 15, fontFamily: 'QuickSand'),
                         ),
                         SizedBox(height: 4),
                         Text(
-                          '2011',
+                          book['año'].toString(),
                           style:
                               TextStyle(fontSize: 15, fontFamily: 'QuickSand'),
                         ),
