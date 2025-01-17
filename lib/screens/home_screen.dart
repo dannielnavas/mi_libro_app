@@ -1,86 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:mi_libro_app/providers/books_provider.dart';
 import 'package:mi_libro_app/screens/book_detail.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<List<dynamic>> fetchBooks() async {
-    // android 10.0.2.2
-    // ios 127.0.0.1
-    // final url = Uri.parse('http://localhost:3001/books');
-    // try {
-    // final response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   final data = jsonDecode(response.body);
-    //   return data['books'];
-    // } else {
-    //   print('Error ${response.statusCode}');
-    //   return [];
-    // }
-    // } catch (e) {
-    //   print('Error request');
-    //   return [];
-    // }
-    return [
-      {
-        "titulo": "Cien años de soledad",
-        "autor": "Gabriel García Márquez",
-        "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
-        "anho": 1967
-      },
-      {
-        "titulo": "1984",
-        "autor": "George Orwell",
-        "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
-        "anho": 1949
-      },
-      {
-        "titulo": "Orgullo y prejuicio",
-        "autor": "Jane Austen",
-        "portada": "https://m.media-amazon.com/images/I/81WcnNQ-TBL.jpg",
-        "anho": 1813
-      },
-      {
-        "titulo": "El señor de los anillos",
-        "autor": "J.R.R. Tolkien",
-        "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
-        "anho": 1954
-      },
-      {
-        "titulo": "Don Quijote de la Mancha",
-        "autor": "Miguel de Cervantes",
-        "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
-        "anho": 1605
-      }
-    ];
-  }
+  // Future<List<dynamic>> fetchBooks() async {
+  // android 10.0.2.2
+  // ios 127.0.0.1
+  // final url = Uri.parse('http://localhost:3001/books');
+  // try {
+  // final response = await http.get(url);
+  // if (response.statusCode == 200) {
+  //   final data = jsonDecode(response.body);
+  //   return data['books'];
+  // } else {
+  //   print('Error ${response.statusCode}');
+  //   return [];
+  // }
+  // } catch (e) {
+  //   print('Error request');
+  //   return [];
+  // }
+  //   return [
+  //     {
+  //       "titulo": "Cien años de soledad",
+  //       "autor": "Gabriel García Márquez",
+  //       "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
+  //       "anho": 1967
+  //     },
+  //     {
+  //       "titulo": "1984",
+  //       "autor": "George Orwell",
+  //       "portada": "https://m.media-amazon.com/images/I/81af+MCATTL.jpg",
+  //       "anho": 1949
+  //     },
+  //     {
+  //       "titulo": "Orgullo y prejuicio",
+  //       "autor": "Jane Austen",
+  //       "portada": "https://m.media-amazon.com/images/I/81WcnNQ-TBL.jpg",
+  //       "anho": 1813
+  //     },
+  //     {
+  //       "titulo": "El señor de los anillos",
+  //       "autor": "J.R.R. Tolkien",
+  //       "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
+  //       "anho": 1954
+  //     },
+  //     {
+  //       "titulo": "Don Quijote de la Mancha",
+  //       "autor": "Miguel de Cervantes",
+  //       "portada": "https://m.media-amazon.com/images/I/91b0C2YNSrL.jpg",
+  //       "anho": 1605
+  //     }
+  //   ];
+  // }
 
   @override
   Widget build(BuildContext context) {
     // fetchBooks();
+    final booksProvider = Provider.of<BooksProvider>(context, listen: false);
+    booksProvider.fetchBooks();
     return Scaffold(
-        body: FutureBuilder<List<dynamic>>(
-            future: fetchBooks(),
-            builder: (context, snapshot) {
-              final books = snapshot.data ?? [];
+        body: Consumer<BooksProvider>(builder: (context, provider, child) {
+          if (provider.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (provider.books.isEmpty) {
+            return Center(
+                child: Text('No books found',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.green,
+                        fontFamily: 'QuickSand')));
+          }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(
-                    child: Text('No books found',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.green,
-                            fontFamily: 'QuickSand')));
-              }
-
-              return ListView.builder(
-                  itemCount: books.length,
-                  itemBuilder: (context, index) {
-                    return _BooksCard(context, books[index]);
-                  });
-            }),
+          return ListView.builder(
+              itemCount: provider.books.length,
+              itemBuilder: (context, index) {
+                return _BooksCard(context, provider.books[index]);
+              });
+        }),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,
           child: Icon(Icons.add, color: Colors.white),
@@ -106,7 +106,7 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => BookDetail(bookName: book['titulo'])));
+                builder: (context) => BookDetail(bookName: book.titulo)));
       },
       child: Padding(
           padding: const EdgeInsets.all(12),
@@ -126,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                         // child: Image.asset('alicia.jpg', fit: BoxFit.cover),
                         child: Image.network(
-                          book!['portada'].toString(),
+                          book!.portada.toString(),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -137,19 +137,19 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          book?['titulo'],
+                          book?.titulo,
                           style:
                               TextStyle(fontSize: 20, fontFamily: 'QuickSand'),
                         ),
                         SizedBox(height: 4),
                         Text(
-                          book?['autor'],
+                          book?.autor,
                           style:
                               TextStyle(fontSize: 15, fontFamily: 'QuickSand'),
                         ),
                         SizedBox(height: 4),
                         Text(
-                          book['anho'].toString(),
+                          book.anho.toString(),
                           style:
                               TextStyle(fontSize: 15, fontFamily: 'QuickSand'),
                         ),
