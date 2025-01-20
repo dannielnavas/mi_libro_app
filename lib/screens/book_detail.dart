@@ -11,14 +11,41 @@ class BookDetail extends StatefulWidget {
   _BookDetailState createState() => _BookDetailState();
 }
 
-class _BookDetailState extends State<BookDetail> {
+class _BookDetailState extends State<BookDetail>
+    with SingleTickerProviderStateMixin {
   bool isFavorite = false;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reverse();
+        }
+      });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     isFavorite = Provider.of<BooksProvider>(context, listen: false)
         .favoriteBook
         .contains(widget.booksData);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -36,11 +63,11 @@ class _BookDetailState extends State<BookDetail> {
         ),
         actions: [
           IconButton(
-            icon: AnimatedSwitcher(
-              duration: Duration(milliseconds: 300),
-              transitionBuilder: (child, animation) {
-                return ScaleTransition(scale: animation, child: child);
-              },
+            icon: ScaleTransition(
+              scale: _scaleAnimation,
+              // transitionBuilder: (child, animation) {
+              //   return ScaleTransition(scale: animation, child: child);
+              // },
               child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
                   key: ValueKey<bool>(isFavorite), color: Colors.redAccent),
             ),
