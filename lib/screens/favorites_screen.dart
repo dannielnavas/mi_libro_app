@@ -26,10 +26,9 @@ class FavoritesScreen extends StatelessWidget {
                       itemCount: favoritesBooks.length,
                       itemBuilder: (context, index) {
                         final book = favoritesBooks[index];
-                        FavoriteBookCard(
+                        return FavoriteBookCard(
                           book: book,
                         );
-                        return null;
                       });
             })));
   }
@@ -50,19 +49,30 @@ class FavoriteBookCard extends StatelessWidget {
       },
       child: Card(
           color: Colors.white,
-          child: Column(
-            children: [
-              Text(book.titulo,
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.green,
-                      fontFamily: 'QuickSand')),
-              Text(book.autor,
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.green,
-                      fontFamily: 'QuickSand')),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Image.network(book.portada, height: 200),
+                    SizedBox(width: 10),
+                    Column(
+                      children: [
+                        Text(book.titulo,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.green,
+                                fontFamily: 'QuickSand')),
+                        Text(book.autor,
+                            style: TextStyle(
+                                fontSize: 18, fontFamily: 'QuickSand')),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           )),
     );
   }
