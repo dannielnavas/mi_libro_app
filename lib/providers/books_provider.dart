@@ -4,6 +4,7 @@ import 'package:mi_libro_app/models/book_model.dart';
 class BooksProvider extends ChangeNotifier {
   bool isLoading = false;
   List<Book> books = [];
+  List<Book> favoriteBook = [];
 
   Future<void> fetchBooks() async {
     isLoading = true;
@@ -43,5 +44,20 @@ class BooksProvider extends ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus(Book book) async {
+    try {
+      final isFavorite = favoriteBook.contains(book);
+      if (isFavorite) {
+        favoriteBook.remove(book);
+      } else {
+        favoriteBook.add(book);
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print('Error $e');
+    }
   }
 }

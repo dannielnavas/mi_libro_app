@@ -106,7 +106,9 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => BookDetail(bookName: book.titulo)));
+                builder: (context) => BookDetail(
+                      booksData: book,
+                    )));
       },
       child: Padding(
           padding: const EdgeInsets.all(12),
