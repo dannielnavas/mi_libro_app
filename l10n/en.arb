@@ -1,0 +1,6 @@
+{
+    "@@locale": "en",
+    "title": "My books app",
+    "noBooks": "No books available",
+    "noFavoriteBooksFound": "No favorite books found"
+}

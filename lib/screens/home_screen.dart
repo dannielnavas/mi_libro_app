@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mi_libro_app/providers/books_provider.dart';
 import 'package:mi_libro_app/screens/book_detail.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +69,7 @@ class HomeScreen extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           } else if (provider.books.isEmpty) {
             return Center(
-                child: Text('No books found',
+                child: Text(AppLocalizations.of(context)!.noBooks,
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.green,

@@ -1,0 +1,6 @@
+{
+  "@@locale": "es",
+  "title": "Mi aplicación de libros",
+  "noBooks": "No hay libros disponibles",
+  "noFavoriteBooksFound": "No se encontraron libros favoritos"
+}

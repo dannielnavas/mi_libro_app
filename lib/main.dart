@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mi_libro_app/providers/books_provider.dart';
 import 'package:mi_libro_app/screens/favorites_screen.dart';
 import 'package:mi_libro_app/screens/home_screen.dart';
@@ -16,6 +18,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BooksProvider()),
       ],
       child: MaterialApp(
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate
+          ],
           debugShowCheckedModeBanner: false,
           title: 'Hola mundo',
           home: MiLibroApp()),
